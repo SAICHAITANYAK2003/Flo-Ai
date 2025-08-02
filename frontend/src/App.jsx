@@ -11,7 +11,7 @@ import ReviewResume from "./pages/ReviewResume";
 import Community from "./pages/Community";
 import { useAuth } from "@clerk/clerk-react";
 import { useEffect } from "react";
-import PaymentStatus from "./components/paymentStatus";
+import PaymentStatus from "./components/PaymentStatus";
 
 const App = () => {
   const { getToken } = useAuth();
