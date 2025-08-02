@@ -17,7 +17,7 @@ const creationsSchema = new mongoose.Schema(
       ],
       required: true,
     },
-    category: { type: mongoose.Schema.Types.Mixed },
+    category: { type: mongoose.Schema.Types.Mixed, default: "" },
     publish: { type: Boolean, default: false },
     likes: { type: [String], default: [] },
   },

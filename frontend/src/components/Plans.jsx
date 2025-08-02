@@ -3,7 +3,8 @@ import PaymentCard from "./PaymentCard.jsx";
 
 const plans = [
   {
-    id: "Free",
+    id: "free",
+    name: "Free",
     amount: 0,
     features: [
       { feature: "Title Generation" },
@@ -11,7 +12,8 @@ const plans = [
     ],
   },
   {
-    id: "Premium",
+    id: "premium",
+    name: "Premium",
     amount: 15,
     duration: "month",
     features: [
@@ -37,12 +39,7 @@ const Plans = () => {
 
       <div className="flex flex-wrap justify-center mt-14 w-full px-4 lg:px-40 gap-6">
         {plans.map((plan, index) => (
-          <PaymentCard
-            plan={plan}
-            key={index}
-            isCurrent={currentPlan === plan.id}
-            onSelect={() => setCurrentPlan(plan.id)}
-          />
+          <PaymentCard plan={plan} key={index} />
         ))}
       </div>
     </section>

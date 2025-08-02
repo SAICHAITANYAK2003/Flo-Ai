@@ -1,21 +1,19 @@
-import { getAuth } from "@clerk/express";
 import { getGroqChatCompletion } from "../services/textService.js";
 import creationsModel from "../models/Creations.js";
 import axios from "axios";
 import cloudinary from "../configs/cloudinary.js";
+import paymentsModel from "../models/Payments.js";
+import dotenv from "dotenv";
+import FormData from "form-data";
+import pdf from "pdf-parse/lib/pdf-parse.js";
+dotenv.config();
 
 //Generate Article
 export const generateArticle = async (req, res) => {
   try {
-    const { userId } = getAuth(req);
+    const userId = req.userId;
     const { prompt, length } = req.body;
-
-    // Validate input
-    if (!userId) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Unauthorized User" });
-    }
+    const user = req.paymentUser;
 
     if (!prompt || !length) {
       return res
@@ -45,6 +43,14 @@ export const generateArticle = async (req, res) => {
       likes: [],
     });
 
+    const newBalance = user.creditBalance - 1;
+    await paymentsModel.findOneAndUpdate(
+      { clerkId: userId },
+      {
+        creditBalance: newBalance,
+      }
+    );
+
     return res.json({ success: true, message: content });
   } catch (error) {
     console.error("generateArticle Error:", error);
@@ -55,14 +61,9 @@ export const generateArticle = async (req, res) => {
 //Generate Blog Titles
 export const generateBlogTitle = async (req, res) => {
   try {
-    const { userId } = getAuth(req);
+    const userId = req.userId;
     const { prompt, category } = req.body;
-
-    if (!userId) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Unauthorized User" });
-    }
+    const user = req.paymentUser;
 
     if (!prompt || !category) {
       return res
@@ -73,7 +74,7 @@ export const generateBlogTitle = async (req, res) => {
     const blogTitlePrompt = `Generate catchy blog title ideas for a blog about "${prompt}" in the category "${category}". Return only the titles as a numbered list.`;
 
     // Set maxTokens depending on your plan or requirements
-    const maxTokens = plan === "premium" ? 100 : 60;
+    const maxTokens = user.plan === "premium" ? 100 : 60;
 
     const response = await getGroqChatCompletion(blogTitlePrompt, maxTokens);
 
@@ -95,6 +96,14 @@ export const generateBlogTitle = async (req, res) => {
       likes: [],
     });
 
+    const newBalance = user.creditBalance - 1;
+    await paymentsModel.findOneAndUpdate(
+      { clerkId: userId },
+      {
+        creditBalance: newBalance,
+      }
+    );
+
     res.json({ success: true, message: content });
   } catch (error) {
     console.log("❌ Error in generateBlogTitle:", error.message);
@@ -105,14 +114,9 @@ export const generateBlogTitle = async (req, res) => {
 //Generate Image
 export const generateImage = async (req, res) => {
   try {
-    const { userId } = getAuth(req);
+    const userId = req.userId;
     const { prompt } = req.body;
-
-    if (!userId) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Unauthorized User" });
-    }
+    const user = req.paymentUser;
 
     if (!prompt) {
       return res
@@ -123,29 +127,251 @@ export const generateImage = async (req, res) => {
     const formData = new FormData();
     formData.append("prompt", prompt);
 
+    const headers = {
+      ...formData.getHeaders(), // ✅ Required to include correct Content-Type
+      "x-api-key": process.env.CLIPDROP_API_KEY, // ✅ Must not be undefined
+    };
+
     const imageResponse = await axios.post(
       "https://clipdrop-api.co/text-to-image/v1",
       formData,
       {
-        headers: {
-          "x-api-key": process.env.CLIPDROP_API_KEY,
-        },
+        headers,
         responseType: "arraybuffer",
       }
     );
 
     //Conver binary -> base64
     const base64 = Buffer.from(imageResponse.data).toString("base64");
-    const dataUri = `data:image/png;base64,${base64}`;
+
+    //Checks which type of file we get from the clipdrop
+    const fileType = imageResponse.headers["Content-Type"];
+
+    const dataUri = `data:${fileType};base64,${base64}`;
 
     const cloudinaryResult = await cloudinary.uploader.upload(dataUri, {
       folder: "AiNest/generated-images",
     });
 
+    const securedUrl = cloudinaryResult.secure_url;
+
+    const newBalance = user.creditBalance - 1;
+    await paymentsModel.findOneAndUpdate(
+      { clerkId: userId },
+      {
+        creditBalance: newBalance,
+      }
+    );
+
+    await creationsModel.create({
+      clerkId: userId,
+      prompt,
+      content: securedUrl,
+      type: "image-generation",
+      publish: false,
+      likes: [],
+    });
+
     res.json({
       success: true,
-      message: cloudinaryResult.secure_url,
+      message: securedUrl,
     });
+  } catch (error) {
+    console.log("❌ Error in generateImage:", error.message);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//
+
+//Background Removal
+
+//
+
+export const removeBg = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const imageFile = req.file.buffer;
+    const user = req.paymentUser;
+
+    if (!imageFile) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Please Upload your image file" });
+    }
+
+    //Background removal Clipdrp api
+
+    const formData = new FormData();
+    formData.append("image_file", imageFile, {
+      filename: req.file.originalname || "image.png",
+      contentType: req.file.mimetype || "image/png",
+    });
+
+    const headers = {
+      ...formData.getHeaders(),
+      "x-api-key": process.env.CLIPDROP_API_KEY,
+    };
+
+    const imageResponse = await axios.post(
+      "https://clipdrop-api.co/remove-background/v1",
+      formData,
+      {
+        headers,
+        responseType: "arraybuffer",
+      }
+    );
+
+    //Convet image raw file to base64
+
+    const base64 = Buffer.from(imageResponse.data).toString("base64");
+
+    //Checks which type of file we get from the clipdrop
+    const fileType = imageResponse.headers["content-type"] || "image/png";
+
+    const dataUri = `data:${fileType};base64,${base64}`;
+
+    const cloudinaryResult = await cloudinary.uploader.upload(dataUri, {
+      folder: "AiNest/Bgremoved-images",
+    });
+
+    const securedUrl = cloudinaryResult.secure_url;
+
+    const newBalance = user.creditBalance - 1;
+
+    //Updating the payment model
+    await paymentsModel.findOneAndUpdate(
+      { clerkId: userId },
+      { creditBalance: newBalance }
+    );
+    const prompt = `Removed background from image: ${req.file.originalname}`;
+
+    //Updating the creations model
+    await creationsModel.create({
+      clerkId: userId,
+      prompt,
+      content: securedUrl,
+      type: "background-removal",
+      publish: false,
+      likes: [],
+    });
+
+    res.json({
+      success: true,
+      message: securedUrl,
+    });
+  } catch (error) {
+    console.log("❌ Error in generateImage:", error.message);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//Object Removal
+
+export const removeObject = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { object } = req.body;
+    const imageFile = req.file.buffer;
+
+    if (!imageFile || !object) {
+      return res.status(400).json({
+        success: false,
+        message: "Please Upload your image file anf object",
+      });
+    }
+
+    //convert buffer to base64
+    const base64 = imageFile.toString("base64");
+    const dataUri = `data:${req.file.mimetype};base64,${base64}`;
+
+    //Upload Cloudinary
+
+    const uploadResult = await cloudinary.uploader.upload(dataUri, {
+      folder: "AiNest/object-removal",
+    });
+
+    const publicId = uploadResult.public_id;
+
+    //Apply Generation transformation
+
+    const transformedUrl = cloudinary.url(publicId, {
+      transformation: [{ effect: `gen_remove:${object}` }],
+      resource_type: "auto",
+    });
+
+    const newBalance = user.creditBalance - 1;
+
+    //Updating the payment model
+    await paymentsModel.findOneAndUpdate(
+      { clerkId: userId },
+      { creditBalance: newBalance }
+    );
+
+    const prompt = `Remove object "${object}" from uploaded image.`;
+    await creationsModel.create({
+      clerkId: userId,
+      prompt,
+      content: transformedUrl,
+      type: "object-removal",
+      publish: false,
+      likes: [],
+    });
+
+    res.json({ success: true, message: transformedUrl });
+  } catch (error) {
+    console.log("❌ Error in generateImage:", error.message);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//Resume Review
+export const resumeReview = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = req.paymentUser;
+    const resumeFile = req.file?.buffer;
+
+    if (!resumeFile) {
+      return res.status(400).json({
+        success: false,
+        message: "Please Upload your file",
+      });
+    }
+
+    if (resumeFile.size > 5 * 1024 * 1024) {
+      return res.status(400).json({
+        success: false,
+        message: "Resume file exceeds allowed size (5MB).",
+      });
+    }
+
+    const pdfText = await pdf(resumeFile);
+    const extractedText = pdfText.text;
+
+    const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content: \n\n${extractedText}`;
+
+    const response = await getGroqChatCompletion(prompt);
+    const content = response?.choices?.[0]?.message?.content?.trim();
+
+    await creationsModel.create({
+      clerkId: userId,
+      prompt,
+      content: content,
+      type: "resume-review",
+      publish: false,
+      likes: [],
+    });
+
+    const newBalance = user.creditBalance - 1;
+
+    //Updating the payment model
+    await paymentsModel.findOneAndUpdate(
+      { clerkId: userId },
+      { creditBalance: newBalance }
+    );
+
+    res.json({ success: true, message: content });
   } catch (error) {
     console.log("❌ Error in generateImage:", error.message);
     res.status(500).json({ success: false, message: error.message });

@@ -11,6 +11,7 @@ import ReviewResume from "./pages/ReviewResume";
 import Community from "./pages/Community";
 import { useAuth } from "@clerk/clerk-react";
 import { useEffect } from "react";
+import PaymentStatus from "./components/paymentStatus";
 
 const App = () => {
   const { getToken } = useAuth();
@@ -34,6 +35,7 @@ const App = () => {
             <Route path="review-resume" element={<ReviewResume />} />
             <Route path="community" element={<Community />} />
           </Route>
+          <Route path="/payment-status" element={<PaymentStatus />} />
         </Routes>
       </main>
     </>
