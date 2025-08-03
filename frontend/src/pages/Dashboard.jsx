@@ -3,17 +3,11 @@ import { dummyCreationData } from "../assets/assets";
 import { Sparkles, BadgeInfo } from "lucide-react";
 import { Protect } from "@clerk/clerk-react";
 import CreationItem from "../components/CreationItem";
+import { useAppContext } from "../context/AppContextProvider";
 
 const Dashboard = () => {
-  const [creationsData, setCreationsData] = useState([]);
+  const { userCreations } = useAppContext();
 
-  const getCreationsData = async () => {
-    setCreationsData(dummyCreationData);
-  };
-
-  useEffect(() => {
-    getCreationsData();
-  }, []);
   return (
     <div className="h-full">
       {/* Info Cards */}
@@ -22,7 +16,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between bg-white border border-gray-300 px-4 py-4 w-72 rounded-md">
           <div className="flex flex-col space-y-2">
             <p className="text-secondary">Total Creations</p>
-            <p className="text-lg">{creationsData.length}</p>
+            <p className="text-lg">{userCreations.length}</p>
           </div>
           <span className="bg-gradient-to-r from-[#3588F2] to-[#0BB0D7] p-2.5 rounded-2xl text-white">
             <Sparkles />
@@ -34,11 +28,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between bg-white border border-gray-300 px-4 py-4 w-72 rounded-md">
           <div className="flex flex-col space-y-2">
             <p className="text-secondary">Plan Status</p>
-            <p className="text-lg">
-              <Protect plan="premium" fallback="Free">
-                Premium
-              </Protect>
-            </p>
+            <p className="text-lg">Premium</p>
           </div>
           <span className="bg-gradient-to-r from-[#FF61C5] to-[#9E53EE] p-2.5 rounded-2xl text-white">
             <BadgeInfo />
@@ -50,7 +40,7 @@ const Dashboard = () => {
       <div className="mt-15   ">
         <h1 className="text-2xl">Recent Creations</h1>
         <div className="mt-10 flex flex-col gap-4">
-          {creationsData.map((item, index) => (
+          {userCreations.map((item, index) => (
             <CreationItem item={item} key={index} />
           ))}
         </div>
