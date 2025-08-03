@@ -8,10 +8,6 @@ import { userAuth } from "../middlewares/auth.js";
 const paymentRouter = express.Router();
 
 paymentRouter.post("/stripe", userAuth, stripePayment);
-paymentRouter.post(
-  "/stipe-webhooks",
-  express.raw({ type: "application/json" }),
-  stripePaymentStatus
-);
+paymentRouter.post("/stripe-webhooks", stripePaymentStatus);
 
 export default paymentRouter;

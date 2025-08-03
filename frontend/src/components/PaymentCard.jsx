@@ -1,26 +1,38 @@
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
+import { useAuth } from "@clerk/clerk-react";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-const handleCheckout = async ({ planId, planAmount }) => {
-  try {
-    const response = await axios.post("http://localhost:4000/payment/stripe", {
-      planId,
-      planAmount,
-    });
-
-    const { id: sessionId } = response.data;
-
-    const stripInitialize = await stripePromise;
-
-    await stripInitialize.redirectToCheckout({ sessionId });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const PaymentCard = ({ plan }) => {
+  const { getToken } = useAuth();
+  const handleCheckout = async ({ planId, planAmount }) => {
+    const token = await getToken();
+    try {
+      const response = await axios.post(
+        `${backendUrl}/payment/stripe`,
+        {
+          planId,
+          planAmount,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const { id: sessionId } = response.data;
+
+      const stripInitialize = await stripePromise;
+
+      await stripInitialize.redirectToCheckout({ sessionId });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <>
       <div className="max-w-80 overflow-hidden rounded-lg shadow mx-4 flex flex-col ">

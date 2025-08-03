@@ -9,16 +9,9 @@ import RemoveBg from "./pages/RemoveBg";
 import RemoveObject from "./pages/RemoveObject";
 import ReviewResume from "./pages/ReviewResume";
 import Community from "./pages/Community";
-import { useAuth } from "@clerk/clerk-react";
-import { useEffect } from "react";
 import PaymentStatus from "./components/PaymentStatus";
 
 const App = () => {
-  const { getToken } = useAuth();
-
-  useEffect(() => {
-    getToken().then((token) => console.log(token));
-  }, []);
 
   return (
     <>

@@ -49,12 +49,13 @@ export const stripePayment = async (req, res) => {
 
 export const stripePaymentStatus = async (req, res) => {
   const sig = req.headers["stripe-signature"];
-  const endPointSecret = process.env.STRIPE_SECRET_KEY;
+  const endPointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, endPointSecret);
+    console.log(event);
   } catch (error) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
@@ -63,7 +64,7 @@ export const stripePaymentStatus = async (req, res) => {
     const session = event.data.object;
 
     try {
-      await paymentsModel.create(
+      await paymentsModel.findOneAndUpdate(
         {
           clerkId: session.metadata.clerkId,
         },
@@ -71,10 +72,12 @@ export const stripePaymentStatus = async (req, res) => {
           $set: { plan: session.metadata.planId, isPaid: true },
           $inc: { creditBalance: 10 },
         },
-        { upsert: true }
+        { upsert: true, new: true }
       );
     } catch (error) {
       console.error("MongoDB Error:", error.message);
     }
   }
+
+  return res.status(200).json({ received: true });
 };

@@ -15,15 +15,18 @@ const allowedOrigins = [
   "http://localhost:5173",
 ];
 
+//Stripe webhooks must come before express.json()
+app.use("/payment/stripe-webhooks", express.raw({ type: "application/json" }));
+
 //Middlewares
 
-app.use(express.json());
 app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
   })
 );
+app.use(express.json());
 app.use(clerkMiddleware());
 
 app.use("/ai", AiRouter);
