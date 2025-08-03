@@ -10,8 +10,11 @@ import RemoveObject from "./pages/RemoveObject";
 import ReviewResume from "./pages/ReviewResume";
 import Community from "./pages/Community";
 import { Toaster } from "react-hot-toast";
+import PaymentStatus from "./components/PaymentStatus";
+import { useAppContext } from "./context/AppContextProvider";
 
 const App = () => {
+  const { status } = useAppContext();
   // const { getToken } = useAuth();
 
   // useEffect(() => {
@@ -34,6 +37,9 @@ const App = () => {
             <Route path="review-resume" element={<ReviewResume />} />
             <Route path="community" element={<Community />} />
           </Route>
+          {status && (
+            <Route path="/payment-status" element={<PaymentStatus />} />
+          )}
         </Routes>
       </main>
     </>

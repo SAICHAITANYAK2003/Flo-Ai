@@ -1,6 +1,12 @@
 import Stripe from "stripe";
 import paymentsModel from "../models/Payments.js";
 
+const isProd = process.env.NODE_ENV === "production";
+
+const FRONTEND_URL = isProd
+  ? process.env.FRONTEND_PROD_URL
+  : process.env.FRONTEND_DEV_URL;
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 //Initialize payment gateway
@@ -34,14 +40,14 @@ export const stripePayment = async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: "http://localhost:5173/payment-status?status=success",
-      cancel_url: "http://localhost:5173/payment-status?status=cancel",
+      success_url: `${FRONTEND_URL}/payment-status?status=success`,
+      cancel_url: `${FRONTEND_URL}/payment-status?status=cancel`,
     });
 
-    res.json({ success: true, id: session.id });
+    return res.json({ success: true, id: session.id });
   } catch (error) {
     console.log("❌ Error in Stripe Payments:", error.message);
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 

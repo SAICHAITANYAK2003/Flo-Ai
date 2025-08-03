@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PaymentCard from "./PaymentCard.jsx";
+import PaymentStatus from "./PaymentStatus.jsx";
 
 const plans = [
   {
@@ -28,7 +29,6 @@ const plans = [
 ];
 
 const Plans = () => {
-  const [currentPlan, setCurrentPlan] = useState("Free");
   return (
     <section className="w-full flex flex-col items-center justify-center py-14">
       <h1 className="text-4xl font-semibold">Choose Your Plan</h1>
@@ -42,6 +42,7 @@ const Plans = () => {
           <PaymentCard plan={plan} key={index} />
         ))}
       </div>
+      <PaymentStatus />
     </section>
   );
 };
