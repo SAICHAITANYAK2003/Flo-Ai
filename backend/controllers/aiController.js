@@ -15,6 +15,8 @@ export const generateArticle = async (req, res) => {
     const { prompt, length } = req.body;
     const user = req.paymentUser;
 
+    
+
     if (!prompt || !length) {
       return res
         .status(400)

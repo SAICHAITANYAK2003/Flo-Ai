@@ -9,13 +9,19 @@ import RemoveBg from "./pages/RemoveBg";
 import RemoveObject from "./pages/RemoveObject";
 import ReviewResume from "./pages/ReviewResume";
 import Community from "./pages/Community";
-import PaymentStatus from "./components/PaymentStatus";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
+  // const { getToken } = useAuth();
+
+  // useEffect(() => {
+  //   getToken().then((token) => console.log(token));
+  // }, []);
 
   return (
     <>
       <main>
+        <Toaster position="top-center" reverseOrder={false} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/ai" element={<Layout />}>
@@ -28,7 +34,6 @@ const App = () => {
             <Route path="review-resume" element={<ReviewResume />} />
             <Route path="community" element={<Community />} />
           </Route>
-          <Route path="/payment-status" element={<PaymentStatus />} />
         </Routes>
       </main>
     </>
