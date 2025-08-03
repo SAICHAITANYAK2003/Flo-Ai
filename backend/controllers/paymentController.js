@@ -57,7 +57,7 @@ export const stripePaymentStatus = async (req, res) => {
     event = stripe.webhooks.constructEvent(req.body, sig, endPointSecret);
     console.log(event);
   } catch (error) {
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    return res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
   if (event.type === "checkout.session.completed") {
