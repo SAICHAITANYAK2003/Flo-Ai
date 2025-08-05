@@ -3,7 +3,8 @@ import CreationItem from "../components/CreationItem";
 import { useAppContext } from "../context/AppContextProvider";
 
 const Dashboard = () => {
-  const { userCreations } = useAppContext();
+  const { userCreations, userDetails } = useAppContext();
+  const { userPlan } = userDetails;
 
   return (
     <div className="h-full">
@@ -25,7 +26,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between bg-white border border-gray-300 px-4 py-4 w-72 rounded-md">
           <div className="flex flex-col space-y-2">
             <p className="text-secondary">Plan Status</p>
-            <p className="text-lg">Premium</p>
+            <p className="text-lg">{userPlan}</p>
           </div>
           <span className="bg-gradient-to-r from-[#FF61C5] to-[#9E53EE] p-2.5 rounded-2xl text-white">
             <BadgeInfo />

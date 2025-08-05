@@ -10,7 +10,7 @@ const Layout = () => {
   const navigate = useNavigate();
   const [showMobileMenu, setMobileMenu] = useState(false);
   const { userDetails } = useAppContext();
-  const { userCredits, userPlan } = userDetails;
+  const { userCredits } = userDetails;
 
   const UserCreditsCard = () => {
     return (
