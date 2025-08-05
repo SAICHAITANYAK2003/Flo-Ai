@@ -1,13 +1,16 @@
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useAppContext } from "../context/AppContextProvider";
+import { useAuth } from "@clerk/clerk-react";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const PaymentCard = ({ plan }) => {
-  const { backendUrl, token } = useAppContext();
+  const { backendUrl } = useAppContext();
+  const { getToken } = useAuth();
   const handleCheckout = async ({ planId, planAmount }) => {
     try {
+      let token = await getToken();
       const response = await axios.post(
         `${backendUrl}/payment/stripe`,
         {

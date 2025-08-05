@@ -13,9 +13,7 @@ export const generateArticle = async (req, res) => {
   try {
     const userId = req.userId;
     const { prompt, length } = req.body;
-    const user = req.paymentUser;
-
-    
+    const user = req.paymentUser; 
 
     if (!prompt || !length) {
       return res

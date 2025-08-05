@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { dummyCreationData } from "../assets/assets";
 import { Sparkles, BadgeInfo } from "lucide-react";
-import { Protect } from "@clerk/clerk-react";
 import CreationItem from "../components/CreationItem";
 import { useAppContext } from "../context/AppContextProvider";
 

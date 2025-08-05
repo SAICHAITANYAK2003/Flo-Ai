@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDb from "./configs/mongodb.js";
 import { clerkMiddleware } from "@clerk/express";
+
 import AiRouter from "./routes/aiRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import paymentRouter from "./routes/paymentRoutes.js";
