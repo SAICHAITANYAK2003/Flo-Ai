@@ -144,7 +144,7 @@ const GenerateImages = () => {
 
           <div className=" flex flex-col   h-[450px] overflow-y-auto   mt-2 ">
             {result ? (
-              <div className="flex items-center gap-4 mt-10">
+              <div className="flex items-center gap-4 mt-2">
                 <img src={result} alt="generated image" />
               </div>
             ) : (

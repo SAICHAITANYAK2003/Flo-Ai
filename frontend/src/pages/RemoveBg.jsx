@@ -96,7 +96,7 @@ const RemoveBg = () => {
           <div className=" flex flex-col   h-[450px] overflow-y-auto   mt-2 ">
             {result ? (
               <>
-                <div className="flex flex-col items-start gap-4 mt-20">
+                <div className="flex flex-col items-start gap-4 mt-1">
                   <img src={result} alt="background removed image" />
                 </div>
               </>

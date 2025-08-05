@@ -126,7 +126,7 @@ const RemoveObject = () => {
 
           <div className=" flex flex-col   h-[450px] overflow-y-auto   mt-2 ">
             {result ? (
-              <div className="mt-20">
+              <div className="mt-2">
                 <img src={result} alt="Object removed image" />
               </div>
             ) : (
