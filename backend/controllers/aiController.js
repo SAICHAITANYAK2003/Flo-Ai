@@ -13,7 +13,7 @@ export const generateArticle = async (req, res) => {
   try {
     const userId = req.userId;
     const { prompt, length } = req.body;
-    const user = req.paymentUser; 
+    const user = req.paymentUser;
 
     if (!prompt || !length) {
       return res
@@ -141,11 +141,13 @@ export const generateImage = async (req, res) => {
       }
     );
 
+    console.log(`image response`, imageResponse);
+
     //Conver binary -> base64
     const base64 = Buffer.from(imageResponse.data).toString("base64");
 
     //Checks which type of file we get from the clipdrop
-    const fileType = imageResponse.headers["Content-Type"];
+    const fileType = imageResponse.headers["content-type"] || "image/png";
 
     const dataUri = `data:${fileType};base64,${base64}`;
 
@@ -155,6 +157,8 @@ export const generateImage = async (req, res) => {
 
     const securedUrl = cloudinaryResult.secure_url;
 
+    console.log(`secured url `, securedUrl);
+
     const newBalance = user.creditBalance - 1;
     await paymentsModel.findOneAndUpdate(
       { clerkId: userId },
@@ -163,14 +167,19 @@ export const generateImage = async (req, res) => {
       }
     );
 
-    await creationsModel.create({
-      clerkId: userId,
-      prompt,
-      content: securedUrl,
-      type: "image-generation",
-      publish: false,
-      likes: [],
-    });
+    try {
+      const newCreation = await creationsModel.create({
+        clerkId: userId,
+        prompt,
+        content: securedUrl,
+        type: "image-generation",
+        publish: false,
+        likes: [],
+      });
+      console.log("✅ Saved creation:", newCreation);
+    } catch (creationErr) {
+      console.error("❌ Error saving to DB:", creationErr);
+    }
 
     res.json({
       success: true,
@@ -178,15 +187,11 @@ export const generateImage = async (req, res) => {
     });
   } catch (error) {
     console.log("❌ Error in generateImage:", error.message);
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-//
-
 //Background Removal
-
-//
 
 export const removeBg = async (req, res) => {
   try {
@@ -261,7 +266,7 @@ export const removeBg = async (req, res) => {
       message: securedUrl,
     });
   } catch (error) {
-    console.log("❌ Error in generateImage:", error.message);
+    console.log("❌ Error in Bg Remove:", error.message);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -273,11 +278,12 @@ export const removeObject = async (req, res) => {
     const userId = req.userId;
     const { object } = req.body;
     const imageFile = req.file.buffer;
+    const user = req.paymentUser;
 
     if (!imageFile || !object) {
       return res.status(400).json({
         success: false,
-        message: "Please Upload your image file anf object",
+        message: "Please Upload your image file and object",
       });
     }
 
@@ -285,20 +291,19 @@ export const removeObject = async (req, res) => {
     const base64 = imageFile.toString("base64");
     const dataUri = `data:${req.file.mimetype};base64,${base64}`;
 
-    //Upload Cloudinary
-
     const uploadResult = await cloudinary.uploader.upload(dataUri, {
       folder: "AiNest/object-removal",
+      transformation: [
+        {
+          effect: `gen_remove:prompt_${encodeURIComponent(
+            object
+          )};remove-shadow_true`,
+        },
+      ],
     });
+    console.log(uploadResult);
 
-    const publicId = uploadResult.public_id;
-
-    //Apply Generation transformation
-
-    const transformedUrl = cloudinary.url(publicId, {
-      transformation: [{ effect: `gen_remove:${object}` }],
-      resource_type: "auto",
-    });
+    const transformedUrl = uploadResult.url;
 
     const newBalance = user.creditBalance - 1;
 
@@ -320,7 +325,7 @@ export const removeObject = async (req, res) => {
 
     res.json({ success: true, message: transformedUrl });
   } catch (error) {
-    console.log("❌ Error in generateImage:", error.message);
+    console.log("❌ Error in Oject removal:", error.message);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -349,7 +354,7 @@ export const resumeReview = async (req, res) => {
     const pdfText = await pdf(resumeFile);
     const extractedText = pdfText.text;
 
-    const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content: \n\n${extractedText}`;
+    const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content: \n\n ${extractedText}`;
 
     const response = await getGroqChatCompletion(prompt);
     const content = response?.choices?.[0]?.message?.content?.trim();

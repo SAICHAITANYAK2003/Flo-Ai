@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Fullscreen } from "lucide-react";
 import Markdown from "react-markdown";
 
 const CreationItem = ({ item }) => {
@@ -36,9 +36,20 @@ const CreationItem = ({ item }) => {
 
       {showContent ? (
         <div className="w-full mt-4 border p-6 border-gray-300 rounded-2xl">
-          {item.type === "image" ? (
-            <div>
-              <img src={item.content} alt="image" className="mt-4" />
+          {item.content.includes("image") ? (
+            <div className="flex  items-start gap-4 ">
+              <img
+                src={item.content}
+                alt="image"
+                className="mt-4 w-40 md:w-50 aspect-square rounded-2xl"
+              />
+              <a
+                target="_blank"
+                href={item.content}
+                className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full"
+              >
+                <Fullscreen />
+              </a>
             </div>
           ) : (
             <div className="mt-5 reset-tw">

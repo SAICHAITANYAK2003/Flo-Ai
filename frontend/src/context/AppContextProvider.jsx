@@ -130,11 +130,75 @@ export const AppContextProvider = ({ children }) => {
 
       const prompt = `Create an image of ${input} in ${style}.`;
 
+      console.log(prompt);
+
       const { data } = await axios.post(
         `${backendUrl}/ai/generate-image`,
+        { prompt },
         {
-          prompt,
-        },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  //Remove BG
+
+  const removeBgFun = async (formData) => {
+    try {
+      token = await getToken();
+
+      const { data } = await axios.post(
+        `${backendUrl}/ai/remove-background`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // Object removal
+  const removeObjectFun = async (formData) => {
+    try {
+      token = await getToken();
+
+      const { data } = await axios.post(
+        `${backendUrl}/ai/object-removal`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  //Resume Review
+  const resumeReviewFun = async (formData) => {
+    try {
+      token = await getToken();
+
+      const { data } = await axios.post(
+        `${backendUrl}/ai/resume-review`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -164,6 +228,9 @@ export const AppContextProvider = ({ children }) => {
     writeArticleFun,
     blogTitlesFun,
     genImageFun,
+    removeBgFun,
+    removeObjectFun,
+    resumeReviewFun,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

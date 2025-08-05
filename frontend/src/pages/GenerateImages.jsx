@@ -1,4 +1,4 @@
-import { Sparkles, Image } from "lucide-react";
+import { Sparkles, Image ,Fullscreen} from "lucide-react";
 import { useState } from "react";
 import { useAppContext } from "../context/AppContextProvider";
 
@@ -32,8 +32,9 @@ const GenerateImages = () => {
         style: selectedStyle,
       });
 
-      if (data.success) {
+      if (data?.success) {
         setResult(data.message);
+        console.log(data);
       } else {
         toast.error(data.message);
       }
@@ -135,10 +136,17 @@ const GenerateImages = () => {
           </div>
 
           {/* Generated Content */}
+           <div className="mt-3 w-full flex  justify-end ">
+              <a href={result} target="_blank" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
+                <Fullscreen/>
+              </a>
+            </div>
 
           <div className=" flex flex-col   h-[450px] overflow-y-auto   mt-2 ">
             {result ? (
-              <img src={result} alt="generated image" />
+              <div className="flex items-center gap-4 mt-10">
+                <img src={result} alt="generated image" />
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-full">
                 <span>
