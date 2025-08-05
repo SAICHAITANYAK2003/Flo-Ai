@@ -10,7 +10,6 @@ import {
 import { userAuth } from "../middlewares/auth.js";
 import { upload } from "../configs/multer.js";
 import { checkCredits } from "../middlewares/checkCredits.js";
-import { getUserCreations } from "../controllers/userController.js";
 
 const AiRouter = express.Router();
 

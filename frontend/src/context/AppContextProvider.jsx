@@ -9,10 +9,9 @@ const AppContext = createContext();
 
 //URL'S Configuration
 
-const backendUrl =
-  import.meta.env.PROD 
-    ? import.meta.env.VITE_BACKEND_PRODUC_URL
-    : import.meta.env.VITE_BACKEND_DEV_URL;
+const backendUrl = import.meta.env.PROD
+  ? import.meta.env.VITE_BACKEND_PRODUC_URL
+  : import.meta.env.VITE_BACKEND_DEV_URL;
 
 export const AppContextProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState("");
@@ -50,7 +49,7 @@ export const AppContextProvider = ({ children }) => {
   };
 
   //Fetch User Creations
-  const fetchUserCreations = async (token) => {
+  const fetchUserCreations = async () => {
     try {
       token = await getToken();
       const { data } = await axios.get(`${backendUrl}/user/recent-creations`, {
