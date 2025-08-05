@@ -209,6 +209,18 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  const imageDownload = async (url, filename = "download image.jpg") => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
     fetchUserCredits();
     fetchUserCreations();
@@ -228,6 +240,7 @@ export const AppContextProvider = ({ children }) => {
     removeBgFun,
     removeObjectFun,
     resumeReviewFun,
+    imageDownload,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

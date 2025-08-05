@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { ChevronDown, Fullscreen } from "lucide-react";
+import { ChevronDown, Download, Fullscreen } from "lucide-react";
 import Markdown from "react-markdown";
+import { useAppContext } from "../context/AppContextProvider";
 
 const CreationItem = ({ item }) => {
   const [showContent, setShowContent] = useState(false);
+  const { imageDownload } = useAppContext();
 
   return (
     <div className="p-4 flex flex-col items-center justify-between w-full border border-gray-200 rounded-md bg-white px-10">
@@ -41,15 +43,26 @@ const CreationItem = ({ item }) => {
               <img
                 src={item.content}
                 alt="image"
-                className="mt-4 w-40 md:w-50 aspect-square rounded-2xl"
+                className="mt-4 w-40 md:w-50  rounded-2xl"
               />
-              <a
-                target="_blank"
-                href={item.content}
-                className="bg-gray-100 hover:bg-gray-200 p-2 rounded-full"
-              >
-                <Fullscreen />
-              </a>
+              <div className=" flex flex-col items-center gap-4 ">
+                <a
+                  target="_blank"
+                  href={item.content}
+                  className="bg-gray-100 hover:bg-gray-200 w-10 h-10 p-1.5 rounded-full flex items-center justify-center"
+                >
+                  <Fullscreen />
+                </a>
+                <button
+                  target="_blank"
+                  onClick={() =>
+                    imageDownload(item.content, "generated-image.jpg")
+                  }
+                  className="bg-gray-100 hover:bg-gray-200 w-10 h-10 p-1.5 rounded-full flex items-center justify-center"
+                >
+                  <Download />
+                </button>
+              </div>
             </div>
           ) : (
             <div className="mt-5 reset-tw">
