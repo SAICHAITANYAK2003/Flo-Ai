@@ -8,9 +8,9 @@ import toast from "react-hot-toast";
 const AppContext = createContext();
 
 //URL'S Configuration
-const nodeEnv = import.meta.env.NODE_ENV;
+
 const backendUrl =
-  nodeEnv === "production"
+  import.meta.env.PROD 
     ? import.meta.env.VITE_BACKEND_PRODUC_URL
     : import.meta.env.VITE_BACKEND_DEV_URL;
 
