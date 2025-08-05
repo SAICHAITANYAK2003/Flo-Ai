@@ -9,7 +9,7 @@ const AppContext = createContext();
 
 //URL'S Configuration
 
-const backendUrl = import.meta.env.VITE_BACKEND_DEV_URL;
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const AppContextProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState("");

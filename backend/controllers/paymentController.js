@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import paymentsModel from "../models/Payments.js";
 
-const FRONTEND_URL = process.env.FRONTEND_DEV_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
