@@ -1,11 +1,7 @@
 import Stripe from "stripe";
 import paymentsModel from "../models/Payments.js";
 
-const isProd = process.env.NODE_ENV === "production";
-
-const FRONTEND_URL = isProd
-  ? process.env.FRONTEND_PROD_URL
-  : process.env.FRONTEND_DEV_URL;
+const FRONTEND_URL = process.env.FRONTEND_DEV_URL;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
