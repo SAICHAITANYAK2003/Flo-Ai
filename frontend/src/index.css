@@ -16,8 +16,11 @@
   font-family: "Geo", sans-serif;
 }
 
+.secondary-font {
+  font-family: "Poppins", sans-serif;
+}
+
 .reset-tw,
 .reset-tw * {
   all: revert !important;
 }
-

@@ -1,17 +1,21 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
+import { assets } from "../assets/assets.js";
+
 const Navbar = () => {
   const { openSignIn } = useClerk();
   const { user } = useUser();
   const navigate = useNavigate();
   return (
     <>
-      <nav className="w-full backdrop-blur-2xl flex items-center justify-between px-10 py-4 sm:px-15 xl:px-32   z-10  fixed ">
-        <p onClick={() => navigate("/")} className="cursor-pointer">
-          AI NEST
-        </p>
+      <nav className="w-full backdrop-blur-2xl flex items-center justify-between px-10  sm:px-15 xl:px-32   z-10  fixed ">
+        <img
+          onClick={() => navigate("/")}
+          src={assets.logo}
+          alt="logo"
+          className="w-50 h-17 cursor-pointer"
+        />
 
         {user ? (
           <UserButton />

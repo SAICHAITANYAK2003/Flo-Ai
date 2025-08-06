@@ -1,5 +1,6 @@
 import { getGroqChatCompletion } from "../services/textService.js";
 import creationsModel from "../models/Creations.js";
+import communityModel from "../models/Community.js";
 import axios from "axios";
 import cloudinary from "../configs/cloudinary.js";
 import paymentsModel from "../models/Payments.js";
@@ -115,7 +116,7 @@ export const generateBlogTitle = async (req, res) => {
 export const generateImage = async (req, res) => {
   try {
     const userId = req.userId;
-    const { prompt } = req.body;
+    const { prompt, publish } = req.body;
     const user = req.paymentUser;
 
     if (!prompt) {
@@ -173,12 +174,19 @@ export const generateImage = async (req, res) => {
         prompt,
         content: securedUrl,
         type: "image-generation",
-        publish: false,
+        publish: publish,
         likes: [],
       });
       console.log("✅ Saved creation:", newCreation);
     } catch (creationErr) {
       console.error("❌ Error saving to DB:", creationErr);
+    }
+
+    if (publish) {
+      await communityModel.create({
+        imageUrl: securedUrl,
+        uploaderId: userId,
+      });
     }
 
     res.json({

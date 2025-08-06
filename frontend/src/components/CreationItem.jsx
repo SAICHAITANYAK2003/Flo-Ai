@@ -56,7 +56,7 @@ const CreationItem = ({ item }) => {
                 <button
                   target="_blank"
                   onClick={() =>
-                    imageDownload(item.content, "generated-image.jpg")
+                    imageDownload(item.content, "download image")
                   }
                   className="bg-gray-100 hover:bg-gray-200 w-10 h-10 p-1.5 rounded-full flex items-center justify-center"
                 >

@@ -4,6 +4,7 @@ import SideBar from "../components/SideBar";
 import { SignIn, useUser } from "@clerk/clerk-react";
 import { AlignLeft } from "lucide-react";
 import { useAppContext } from "../context/AppContextProvider";
+import { assets } from "../assets/assets";
 
 const Layout = () => {
   const { user } = useUser();
@@ -17,12 +18,14 @@ const Layout = () => {
       <div className="">
         <div className="flex items-center divide-x divide-gray-300 py-1 text-sm border border-gray-300 rounded-full">
           <span className="pr-1 pl-3 text-lg"></span>
-          <span className="pl-2 pr-5 text-[17px] bg-gradient-to-r from-rose-500 to-indigo-500 font-medium bg-clip-text text-transparent ">
+          <span className="pl-2 pr-5 text-[17px] bg-gradient-to-r from-rose-500 to-indigo-500 font-medium bg-clip-text text-transparent secondary-font">
             Credits :{" "}
             {!userCredits ? (
               <span className="text-black ml-3">0</span>
             ) : (
-              <span className="text-black ml-3">{userCredits}</span>
+              <span className="text-black ml-3 secondary-font">
+                {userCredits}
+              </span>
             )}
           </span>
         </div>
@@ -34,10 +37,14 @@ const Layout = () => {
     <>
       {user ? (
         <div className="bg-slate-100 h-screen flex flex-col">
-          <nav className="bg-white py-5 px-10 border-b border-slate-200 flex items-center justify-between relative">
-            <p onClick={() => navigate("/")} className="cursor-pointer">
-              AI NEST
-            </p>
+          <nav className="bg-white py-2 px-10 border-b border-slate-200 flex items-center justify-between relative">
+            
+            <img
+              onClick={() => navigate("/")}
+              src={assets.logo}
+              alt="logo"
+              className="w-35 h-12 cursor-pointer"
+            />
 
             <div className="flex items-center gap-4">
               <UserCreditsCard />

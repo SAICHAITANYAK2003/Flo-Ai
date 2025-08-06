@@ -15,6 +15,7 @@ export const AppContextProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState("");
   const [userCreations, setUserCreations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [publishedCreations, setPublishedCreations] = useState([]);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const status = searchParams.get("status");
@@ -121,7 +122,7 @@ export const AppContextProvider = ({ children }) => {
   };
 
   //Generate Image
-  const genImageFun = async ({ input, style }) => {
+  const genImageFun = async ({ input, style, publish }) => {
     try {
       token = await getToken();
 
@@ -131,7 +132,7 @@ export const AppContextProvider = ({ children }) => {
 
       const { data } = await axios.post(
         `${backendUrl}/ai/generate-image`,
-        { prompt },
+        { prompt, publish },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -209,7 +210,29 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
-  const imageDownload = async (url, filename = "download image.jpg") => {
+  //Fetch All Published creations
+  const publishedCreationsFun = async (formData) => {
+    try {
+      token = await getToken();
+
+      const { data } = await axios.get(
+        `${backendUrl}/community/all-images`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPublishedCreations(data.data);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const imageDownload = async (url, filename) => {
     const response = await fetch(url);
     const blob = await response.blob();
     const link = document.createElement("a");
@@ -224,6 +247,7 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => {
     fetchUserCredits();
     fetchUserCreations();
+    publishedCreationsFun();
   }, []);
 
   const value = {
@@ -241,6 +265,7 @@ export const AppContextProvider = ({ children }) => {
     removeObjectFun,
     resumeReviewFun,
     imageDownload,
+    publishedCreations,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

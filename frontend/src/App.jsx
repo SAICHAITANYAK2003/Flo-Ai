@@ -15,11 +15,6 @@ import { useAppContext } from "./context/AppContextProvider";
 
 const App = () => {
   const { status } = useAppContext();
-  // const { getToken } = useAuth();
-
-  // useEffect(() => {
-  //   getToken().then((token) => console.log(token));
-  // }, []);
 
   return (
     <>

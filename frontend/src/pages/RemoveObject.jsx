@@ -1,7 +1,8 @@
-import { Sparkles, Scissors, Fullscreen } from "lucide-react";
+import { Sparkles, Scissors, Fullscreen, Download } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAppContext } from "../context/AppContextProvider";
+import ActionButtons from "../components/ActionButtons";
 
 const RemoveObject = () => {
   const [input, setInput] = useState("");
@@ -112,14 +113,8 @@ const RemoveObject = () => {
             <h2 className="text-2xl">Processed Image</h2>
           </div>
 
-          <div className="mt-3 w-full flex  justify-end ">
-            <a
-              href={result}
-              target="_blank"
-              className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-            >
-              <Fullscreen />
-            </a>
+          <div className="mt-3 w-full flex  justify-end gap-4">
+            <ActionButtons result={result} />
           </div>
 
           {/* Generated Content */}

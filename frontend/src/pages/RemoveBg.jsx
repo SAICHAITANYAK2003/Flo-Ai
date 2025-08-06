@@ -1,6 +1,7 @@
-import { Sparkles, Eraser, Fullscreen } from "lucide-react";
+import { Sparkles, Eraser, Fullscreen, Download } from "lucide-react";
 import { useState } from "react";
 import { useAppContext } from "../context/AppContextProvider";
+import ActionButtons from "../components/ActionButtons";
 
 const RemoveBg = () => {
   const [file, setFile] = useState(null);
@@ -82,14 +83,10 @@ const RemoveBg = () => {
               <Eraser className="text-[#FF4938]" />
             </span>
             <h2 className="text-2xl">Processed Image</h2>
-
-           
           </div>
-           <div className="mt-3 w-full flex  justify-end ">
-              <a href={result} target="_blank" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-                <Fullscreen/>
-              </a>
-            </div>
+          <div className="mt-3 w-full flex  justify-end gap-4">
+            <ActionButtons result={result} />
+          </div>
 
           {/* Generated Content */}
 
@@ -111,7 +108,6 @@ const RemoveBg = () => {
               </div>
             )}
           </div>
-          
         </div>
       </div>
     </>

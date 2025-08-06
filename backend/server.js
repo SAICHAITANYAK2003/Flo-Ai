@@ -7,6 +7,7 @@ import { clerkMiddleware } from "@clerk/express";
 import AiRouter from "./routes/aiRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import paymentRouter from "./routes/paymentRoutes.js";
+import communityRouter from "./routes/communityRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(clerkMiddleware());
 app.use("/ai", AiRouter);
 app.use("/user", userRouter);
 app.use("/payment", paymentRouter);
+app.use("/community", communityRouter);
 
 //Configs
 await connectDb();

@@ -1,6 +1,8 @@
-import { Sparkles, Image ,Fullscreen} from "lucide-react";
+import { Sparkles, Image } from "lucide-react";
 import { useState } from "react";
 import { useAppContext } from "../context/AppContextProvider";
+import Popover from "../components/Popover";
+import ActionButtons from "../components/ActionButtons";
 
 const imageStyles = [
   "Realistic",
@@ -30,6 +32,7 @@ const GenerateImages = () => {
       const data = await genImageFun({
         input,
         style: selectedStyle,
+        publish,
       });
 
       if (data?.success) {
@@ -124,9 +127,7 @@ const GenerateImages = () => {
             Generate image
           </button>
         </form>
-
         {/* Right Col */}
-
         <div className="bg-white p-8 rounded-md border border-gray-200 flex-1 flex-col">
           <div className="flex items-center space-x-3">
             <span>
@@ -135,12 +136,10 @@ const GenerateImages = () => {
             <h2 className="text-2xl">Generated Images</h2>
           </div>
 
+          <div className=" flex  justify-end mt-2">
+            <ActionButtons result={result} />
+          </div>
           {/* Generated Content */}
-           <div className="mt-3 w-full flex  justify-end ">
-              <a href={result} target="_blank" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-                <Fullscreen/>
-              </a>
-            </div>
 
           <div className=" flex flex-col   h-[450px] overflow-y-auto   mt-2 ">
             {result ? (
