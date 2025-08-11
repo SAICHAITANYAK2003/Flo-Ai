@@ -9,12 +9,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     <>
-      <nav className="w-full backdrop-blur-2xl flex items-center justify-between px-10  sm:px-15 xl:px-32   z-10  fixed ">
+      <nav className="w-full backdrop-blur-2xl flex items-center justify-between px-10  sm:px-15 xl:px-32 pt-4   z-10  fixed ">
         <img
           onClick={() => navigate("/")}
           src={assets.logo}
           alt="logo"
-          className="w-50 h-17 cursor-pointer"
+          className="w-40 cursor-pointer"
         />
 
         {user ? (
