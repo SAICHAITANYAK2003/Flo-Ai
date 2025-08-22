@@ -15,6 +15,7 @@ const app = express();
 const allowedOrigins = [
   "https://ai-nest-frontend.vercel.app",
   "http://localhost:5173",
+  "https://floai.webinfloo.com",
 ];
 
 //Stripe webhooks must come before express.json()
