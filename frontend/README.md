@@ -1,12 +1,91 @@
-# React + Vite
+# 🌐 AI Nest – Full Stack Application  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Frontend](https://img.shields.io/badge/Frontend-React-blue?logo=react&style=flat)  
+![Backend](https://img.shields.io/badge/Backend-Node.js-green?logo=node.js&style=flat)  
+![Database](https://img.shields.io/badge/Database-MongoDB-darkgreen?logo=mongodb&style=flat)  
+![Deployment](https://img.shields.io/badge/Deployed%20on-Vercel%20&%20Render-black?logo=vercel&style=flat)  
 
-Currently, two official plugins are available:
+> 🚀 **AI Nest** is a modern full-stack application built with **React + Vite (Frontend)** and **Node.js + Express (Backend)**.  
+It integrates authentication, payments, file storage, AI APIs, and a clean responsive UI.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🌍 **Live Demo:** [Frontend App](https://floai.webinfloo.com/)  
+⚡ **Backend API:** [Render Server](https://ai-nest-backend.onrender.com)  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Features  
+
+- 🔑 **Authentication** with [Clerk](https://clerk.dev/)  
+- 💳 **Payments** using [Stripe](https://stripe.com/)  
+- ☁️ **Image Uploads** via [Cloudinary](https://cloudinary.com/)  
+- 🤖 **AI Integration** with [OpenAI](https://openai.com/) & [Groq](https://groq.com/)  
+- 📄 **PDF Parsing** for extracting text  
+- 🌐 **Responsive Frontend** with React, TailwindCSS, and Lucide Icons  
+- 🔔 **Toast Notifications** using `react-hot-toast`  
+
+---
+
+## 🏗️ Tech Stack  
+
+### 🔹 Frontend  
+- ⚛️ React 19  
+- 🚀 Vite  
+- 🎨 TailwindCSS 4  
+- 🛠️ React Router v7  
+- 🔔 React Hot Toast  
+- 🖼️ Lucide React Icons  
+
+### 🔹 Backend  
+- 🟢 Node.js + Express  
+- 🗄️ MongoDB (with Mongoose ORM)  
+- 🔑 Clerk Authentication (Express SDK)  
+- 💳 Stripe Payment Gateway  
+- ☁️ Cloudinary + Multer (File Uploads)  
+- 🤖 OpenAI & Groq SDKs (AI APIs)  
+- 📄 pdf-parse for document handling  
+
+---
+
+## ⚙️ Installation & Setup  
+
+### 
+
+1️⃣ Clone the repository 
+
+```
+
+git clone https://github.com/your-username/ai-nest.git
+cd ai-nest
+
+```
+
+2️⃣ Backend Setup
+
+```
+
+cd backend
+npm install
+npm run server
+
+```
+
+
+3️⃣ Frontend Setup
+
+```
+
+cd frontend
+npm install
+npm run dev
+
+```
+
+
+
+---
+
+ 
+👨‍💻 Author
+
+Built with ❤️ by Sai Chaitanya Koduri
+
